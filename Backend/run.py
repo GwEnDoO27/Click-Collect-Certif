@@ -1,8 +1,8 @@
-import uvicorn # type: ignore
+import uvicorn  # type: ignore
 
 if __name__ == "__main__":
     uvicorn.run(
-        "app.main:app",
+        "src.main:src",
         host="localhost",
         port=8080,
         log_level="info",

@@ -43,6 +43,22 @@ services:
   #  #  start_period: 10s
   #  #restart: unless-stopped
 
+  db:
+    container_name: DB_ClickCollect
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: encrypted_mdp123
+      POSTGRES_USER: admin
+      POSTGRES_DB: clickcollect
+    volumes:
+      - pgdata:/var/lib/postgresql
+    networks:
+      - "Click_Collect_Net"
+
 networks:
   Click_Collect_Net:
     driver: bridge
+
+volumes:
+  pgdata:

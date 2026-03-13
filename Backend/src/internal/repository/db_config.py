@@ -1,7 +1,6 @@
 import logging
 import os
 from typing import Optional
-
 import psycopg2  # type: ignore
 from dotenv import load_dotenv  # type: ignore
 
@@ -10,10 +9,7 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 
-class Db_Config:
-    def __init__(self):
-        pass
-
+class Db:
     @staticmethod
     def init_conn() -> Optional["psycopg2.connection"]:
         try:
@@ -35,12 +31,13 @@ class Db_Config:
             cur = conn.cursor()
             cur.execute("""CREATE TABLE IF NOT EXISTS commercant(
                         id SERIAL PRIMARY KEY,
+                        uid VARCHAR(255) NOT NULL
                         username VARCHAR(50) NOT NULL,
                         prenom VARCHAR(50) NOT NULL,
                         nom VARCHAR(50) NOT NULL,
                         mail VARCHAR(100) NOT NULL,
                         banniere VARCHAR(200) NOT NULL,
-                        mdp VARCHAR(50) NOT NULL,
+                        mdp VARCHAR(255) NOT NULL,
                         photo_profil VARCHAR(200) NOT NULL);
                         """)
             conn.commit()

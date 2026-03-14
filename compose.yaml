@@ -17,13 +17,13 @@ services:
       - CORS_ALLOW_METHODS=["POST","GET","DELETE","PUT"]
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/api/health" ]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
-    restart: no
+    # healthcheck:
+    #   test: [ "CMD", "curl", "-f", "http://localhost:8080/api/health" ]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 3
+    #   start_period: 10s
+    # restart: no
   frontend:
     container_name: Frontend_ClickCollect
     build:
@@ -39,10 +39,10 @@ services:
       - API_URL=http://backend:8080
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    depends_on:
-      backend:
-        condition: service_healthy
-    restart: no
+    # depends_on:
+    #   backend:
+    #     condition: service_healthy
+    # restart: no
 
   db:
     container_name: DB_ClickCollect

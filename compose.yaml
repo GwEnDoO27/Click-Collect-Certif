@@ -24,24 +24,25 @@ services:
       retries: 3
       start_period: 10s
     restart: no
-  #frontend:
-  #  container_name: Frontend_ClickCollect
-  #  build:
-  #    context: ./Frontend
-  #    dockerfile: dockerfile.Frontend
-  #  ports:
-  #    - "60300:3000"
-  #  networks:
-  #    - "Click_Collect_Net"
-  #  extra_hosts:
-  #    - "host.docker.internal:host-gateway"
-  #  #healthcheck:
-  #  #  test: [ "CMD", "wget", "--spider", "-q", "--method=GET", "http://localhost:8002" ]
-  #  #  interval: 10s
-  #  #  timeout: 5s
-  #  #  retries: 3
-  #  #  start_period: 10s
-  #  #restart: unless-stopped
+  frontend:
+    container_name: Frontend_ClickCollect
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile.frontend
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:60808
+    ports:
+      - "60300:3000"
+    networks:
+      - "Click_Collect_Net"
+    environment:
+      - API_URL=http://backend:8080
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: no
 
   db:
     container_name: DB_ClickCollect

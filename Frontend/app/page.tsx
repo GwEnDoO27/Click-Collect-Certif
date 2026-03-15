@@ -1,19 +1,29 @@
-import { Button } from "@/components/ui/button"
+import Navbar from "@/components/Navbar"
+import ProductCard from "@/components/ProductCard"
+import ProductFilters from "@/components/ProductFilters"
+import Footer from "@/components/Footer"
+import { products } from "@/lib/products"
 
-export default function Page() {
+
+export default function Home() {
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
+    <>
+      <Navbar />
+      <main className="mx-auto max-w-[1200px] px-6 py-8">
+        <div className="mb-6">
+          <h1 className="text-[22px] font-medium">Nos produits</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Réservez en ligne, prenez rendez-vous avec le commerçant / particulier et réglez le montant en personne
+          </p>
         </div>
-        <div className="font-mono text-xs text-muted-foreground">
-          (Press <kbd>d</kbd> to toggle dark mode)
+        <ProductFilters />
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4">
+          {products.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
         </div>
-      </div>
-    </div>
+      </main>
+      <Footer />
+    </>
   )
 }

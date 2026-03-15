@@ -2,19 +2,19 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
+import { products, Product } from "@/lib/products"
 
-type Product = {
-  id: number
-  name: string
-  category: string
-  price: number
-  emoji: string
-  badge?: "Promo" | "Nouveau"
+type Props = {
+  product: Product
+  onOpen: () => void
 }
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({ product, onOpen }: Props) {
   return (
-    <Card className="cursor-pointer overflow-hidden transition-colors hover:border-primary">
+    <Card
+      className="cursor-pointer overflow-hidden transition-colors hover:border-primary"
+      onClick={onOpen}
+    >
       <div className="relative flex h-[140px] items-center justify-center bg-muted text-5xl">
         {product.emoji}
         {product.badge && (
@@ -35,7 +35,14 @@ export default function ProductCard({ product }: { product: Product }) {
           <span className="text-base font-medium text-primary">
             {product.price.toFixed(2)} €
           </span>
-          <Button size="icon" variant="outline" className="h-7 w-7 rounded-lg">
+          <Button
+            size="icon"
+            variant="outline"
+            className="h-7 w-7 rounded-lg hover:bg-amber-200"
+            onClick={(e) => {
+              ;(e.stopPropagation(), console.log("hello"))
+            }}
+          >
             <Plus size={14} />
           </Button>
         </div>

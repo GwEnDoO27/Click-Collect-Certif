@@ -1,11 +1,16 @@
+"use client"
 import Navbar from "@/components/Navbar"
 import ProductCard from "@/components/ProductCard"
 import ProductFilters from "@/components/ProductFilters"
 import Footer from "@/components/Footer"
-import { products } from "@/lib/products"
+import ProductDetail from "@/components/ProductDetail"
+import { products, Product } from "@/lib/products"
 
+import { useState } from "react"
 
 export default function Home() {
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+
   return (
     <>
       <Navbar />
@@ -13,17 +18,27 @@ export default function Home() {
         <div className="mb-6">
           <h1 className="text-[22px] font-medium">Nos produits</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Réservez en ligne, prenez rendez-vous avec le commerçant / particulier et réglez le montant en personne
+            Réservez en ligne, prenez rendez-vous avec le commerçant /
+            particulier et réglez le montant en personne
           </p>
         </div>
         <ProductFilters />
         <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4">
           {products.map((p) => (
-            <ProductCard key={p.id} product={p} />
+            <ProductCard
+              key={p.id}
+              product={p}
+              onOpen={() => setSelectedProduct(p)}
+            />
+            // </Button>
           ))}
         </div>
       </main>
       <Footer />
+      <ProductDetail
+        product={selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+      />
     </>
   )
 }

@@ -1,6 +1,7 @@
 import logging
 import os
 from typing import Optional
+
 import psycopg2  # type: ignore
 from dotenv import load_dotenv  # type: ignore
 
@@ -57,7 +58,8 @@ class Db:
                         description VARCHAR(200) NOT NULL,
                         quantite INTEGER NOT NULL,
                         prix NUMERIC NOT NULL,
-                        photo_produit VARCHAR(200) NOT NULL);
+                        photo_produit VARCHAR(200) NOT NULL),
+                        categorie VARCHAR(200) NOT NULL;
                         """)
             conn.commit()
             cur.close()

@@ -17,8 +17,8 @@ export default function RegisterPage() {
   const [userName, setUserName] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
-  const [profilePicture, setProfilePicture] = useState("")
-  const [bannerPicture, setBannerPicture] = useState("")
+  // const [profilePicture, setProfilePicture] = useState("")
+  // const [bannerPicture, setBannerPicture] = useState("")
   const [errors, setErrors] = useState({
     email: "",
     firstName: "",
@@ -32,14 +32,28 @@ export default function RegisterPage() {
   const [image, setImage] = useState(null)
   const inputRef = useRef(null)
 
+  const [banner, setBanner] = useState(null)
+  const inputRefBanner = useRef(null)
+
   const handleClick = () => {
     inputRef.current.click()
   }
 
+  const handleClickBanner = () => {
+    inputRefBanner.current.click()
+    }
+  
   const handleChange = (e) => {
     const file = e.target.files[0]
     if (file) {
       setImage(URL.createObjectURL(file))
+    }
+  }
+
+  const handleChangeBanner = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setBanner(URL.createObjectURL(file))
     }
   }
 
@@ -214,6 +228,7 @@ export default function RegisterPage() {
               <p className="text-xs text-destructive">{errors.password}</p>
             )}
           </div>
+
           <div className="flex cursor-pointer flex-col items-center gap-4">
             <input
               type="file"
@@ -228,6 +243,26 @@ export default function RegisterPage() {
             {image && (
               <img
                 src={image}
+                alt="preview"
+                className="h-40 w-40 rounded-full border object-cover"
+              />
+            )}
+          </div>
+
+          <div className="flex cursor-pointer flex-col items-center gap-4">
+            <input
+              type="file"
+              accept="image/*"
+              ref={inputRefBanner}
+              onChange={handleChangeBanner}
+              className="hidden"
+            />
+
+            <Button onClick={handleClickBanner}>Choisir une bannière</Button>
+
+            {banner && (
+              <img
+                src={banner}
                 alt="preview"
                 className="h-40 w-40 rounded-full border object-cover"
               />

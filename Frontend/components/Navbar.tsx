@@ -2,6 +2,7 @@ import { ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { ToolTipProfile } from "@/components/ProfileTooltip"
+import Link from "next/link"
 
 export default function Navbar() {
   return (
@@ -12,14 +13,16 @@ export default function Navbar() {
       </span>
       <TooltipProvider>
       <ul className="flex flex-row gap-4">
-        <ToolTipProfile />
-        <Button className="cursor-pointer gap-2 bg-primary text-primary-foreground">
-          <ShoppingCart size={20} />
-          Panier
-          <span className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-primary-foreground text-[11px] font-semibold text-primary">
-            3
-          </span>
-        </Button>
+          <ToolTipProfile />
+          <Link href={"/cart"}>
+            <Button className="cursor-pointer gap-2 bg-primary text-primary-foreground">
+              <ShoppingCart size={20} />
+              Panier
+              <span className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-primary-foreground text-[11px] font-semibold text-primary">
+                3
+              </span>
+              </Button>
+          </Link>
       </ul>
       </TooltipProvider>
     </nav>

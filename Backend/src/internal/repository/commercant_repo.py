@@ -79,3 +79,33 @@ class Commercant_Repo:
             conn.rollback()
             print(f"Erreur lors de la mise à jour : {e}")
             return False
+
+    def select_commercant_infos(conn: "psycopg2.connection", commercant: Commercant):
+        try:
+            cur = conn.cursor()
+
+            requete = "SELECT uid, username, prenom, nom, mail, banniere, pdp FROM commercant WHERE uid = %s"
+
+            cur.execute(requete, (commercant.uid,))
+            result = cur.fetchone()
+            cur.close()
+
+            return result
+        except psycopg2.Error as e:
+            print(f"Erreur lors de la sélection : {e}")
+            return None
+
+    def login_commercant(conn: "psycopg2.connection", mail: str, mdp: str):
+        try:
+            cur = conn.cursor()
+
+            requete = "SELECT uid, username, prenom, nom, mail, banniere, pdp FROM commercant WHERE mail = %s AND mdp = %s"
+
+            cur.execute(requete, (mail, mdp))
+            result = cur.fetchone()
+            cur.close()
+
+            return result
+        except psycopg2.Error as e:
+            print(f"Erreur lors du login : {e}")
+            return None

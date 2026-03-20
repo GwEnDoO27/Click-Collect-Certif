@@ -192,7 +192,7 @@ export default function RegisterPage() {
               onChange={(e) => setFirstName(e.target.value)}
               className={errors.firstName ? "border-destructive" : ""}
             />
-            {errors.firstName && (
+            {submitted && errors.firstName && (
               <p className="text-xs text-destructive">{errors.firstName}</p>
             )}
           </div>

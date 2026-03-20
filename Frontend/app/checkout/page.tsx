@@ -2,20 +2,12 @@
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import CartTotal from "@/components/CartTotal"
-import { products, Product } from "@/lib/products"
-import { cart, Cart } from "@/lib/cart"
-import CartItemCard from "@/components/CartItemCard"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ShoppingBag, Eye, EyeOff, ArrowLeft } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
+import CheckoutCard from "@/components/CheckoutCard"
 
-import { useState } from "react"
-
-export default function CartPage() {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-  const [cartItems, setSelectedCartItems] = useState<Cart | null>(null)
-  console.log("CART : ", cart)
-
+export default function CartCheckoutPage() {
   return (
     <>
       <Navbar />
@@ -27,22 +19,14 @@ export default function CartPage() {
               Retour
             </Button>
           </Link>
-          <h1 className="text-[22px] font-medium">Votre panier</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Voici les éléments de vôtre panier :
-          </p>
+          <h1 className="text-[22px] font-medium">Vos informations</h1>
+          <span className="mt-1 text-sm text-muted-foreground">
+            Renseignez les champs ci-dessous
+          </span>
         </div>
         <div className="flex grid-cols-[1fr_350px] flex-row gap-6">
           <div className="flex w-full flex-col gap-4">
-            {cart.items.map((c) => (
-              <CartItemCard
-                key={c.id}
-                item={c}
-
-                //   onOpen={() => setSelectedCartItems(p)}
-              />
-              // </Button>
-            ))}
+            <CheckoutCard></CheckoutCard>
           </div>
           <CartTotal></CartTotal>
         </div>
@@ -54,10 +38,6 @@ export default function CartPage() {
         </Link>
       </main>
       <Footer />
-      {/* <ProductDetail
-        product={selectedProduct}
-        onClose={() => setSelectedCartItems(null)}
-      /> */}
     </>
   )
 }

@@ -1,7 +1,7 @@
 "use client"
 import { useState, useRef } from "react"
 import Link from "next/link"
-import { ShoppingBag, Eye, EyeOff, ArrowLeft } from "lucide-react"
+import { ShoppingBag, Eye, EyeOff, ArrowLeft, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -17,8 +17,6 @@ export default function RegisterPage() {
   const [userName, setUserName] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
-  // const [profilePicture, setProfilePicture] = useState("")
-  // const [bannerPicture, setBannerPicture] = useState("")
   const [errors, setErrors] = useState({
     email: "",
     firstName: "",
@@ -29,11 +27,15 @@ export default function RegisterPage() {
     profilePicture: "",
     bannerPicture: "",
   })
-  const [image, setImage] = useState(null)
-  const inputRef = useRef(null)
+  const [profileImage, setProfileImage] = useState<string | null>(null)
+  const inputRef = useRef<HTMLInputElement | null>(null)
 
-  const [banner, setBanner] = useState(null)
-  const inputRefBanner = useRef(null)
+  const [banner, setBanner] = useState<string | null>(null)
+  const inputRefBanner = useRef<HTMLInputElement | null>(null)
+  const [submitted, setSubmitted] = useState(false)
+
+  const [profileFile, setProfileFile] = useState<File | null>(null)
+  const [bannerFile, setBannerFile] = useState<File | null>(null)
 
   const handleClick = () => {
     inputRef.current.click()
@@ -41,12 +43,13 @@ export default function RegisterPage() {
 
   const handleClickBanner = () => {
     inputRefBanner.current.click()
-    }
-  
+  }
+
   const handleChange = (e) => {
     const file = e.target.files[0]
     if (file) {
-      setImage(URL.createObjectURL(file))
+      setProfileImage(URL.createObjectURL(file))
+      setProfileFile(file)
     }
   }
 
@@ -54,11 +57,38 @@ export default function RegisterPage() {
     const file = e.target.files[0]
     if (file) {
       setBanner(URL.createObjectURL(file))
+      setBannerFile(file)
     }
   }
 
+  const handleRemoveImage = () => {
+    setProfileImage(null)
+    if (inputRef.current) {
+      inputRef.current.value = ""
+    }
+  }
+
+  const handleRemoveBanner = () => {
+    setBanner(null)
+    if (inputRefBanner.current) {
+      inputRefBanner.current.value = ""
+    }
+  }
+
+  const isRegisterFormValid =
+    email &&
+    /\S+@\S+\.\S+/.test(email) &&
+    firstName !== "" &&
+    lastName !== "" &&
+    userName !== "" &&
+    password !== "" &&
+    confirmPassword === password
+
+  const hasErrors = Object.values(errors).some((error) => error !== "")
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    setSubmitted(true)
     const newErrors = {
       email: "",
       firstName: "",
@@ -71,18 +101,34 @@ export default function RegisterPage() {
     }
     if (!email || !/\S+@\S+\.\S+/.test(email))
       newErrors.email = "Adresse e-mail invalide."
-    if (firstName === "")
-      newErrors.firstName = "Prénom invalide."
-    if (lastName === "")
-      newErrors.lastName = "Nom invalide."
-    if (userName === "")
-      newErrors.userName = "Nom invalide."
+    if (firstName === "") newErrors.firstName = "Prénom invalide."
+    if (lastName === "") newErrors.lastName = "Nom invalide."
+    if (userName === "") newErrors.userName = "Nom invalide."
     if (!password) newErrors.password = "Mot de passe requis."
     setErrors(newErrors)
-    if (!newErrors.email && !newErrors.password) {
-      // TODO : appel API login
 
-      console.log("Firstname : ", firstName)
+    // If fields are filled, we create the form that will be sent to the front
+    if (!hasErrors) {
+      // Basic checks to verify our inputs
+
+      const formDataRegister = new FormData()
+      formDataRegister.append("email", email)
+      formDataRegister.append("firstName", firstName)
+      formDataRegister.append("lastName", lastName)
+      formDataRegister.append("userName", userName)
+      formDataRegister.append("password", password)
+      if (profileFile) {
+        // formDataRegister.append("profileImage", profileImage)
+        formDataRegister.append("profileImage", profileFile)
+      }
+      if (bannerFile) {
+        // formDataRegister.append("banner", banner)
+        formDataRegister.append("banner", bannerFile)
+      }
+
+      console.log([...formDataRegister.entries()])
+
+      // Call API
     }
   }
 
@@ -131,7 +177,7 @@ export default function RegisterPage() {
               onChange={(e) => setEmail(e.target.value)}
               className={errors.email ? "border-destructive" : ""}
             />
-            {errors.email && (
+            {submitted && errors.email && (
               <p className="text-xs text-destructive">{errors.email}</p>
             )}
           </div>
@@ -161,7 +207,7 @@ export default function RegisterPage() {
               onChange={(e) => setLastName(e.target.value)}
               className={errors.lastName ? "border-destructive" : ""}
             />
-            {errors.lastName && (
+            {submitted && errors.lastName && (
               <p className="text-xs text-destructive">{errors.lastName}</p>
             )}
           </div>
@@ -176,7 +222,7 @@ export default function RegisterPage() {
               onChange={(e) => setUserName(e.target.value)}
               className={errors.userName ? "border-destructive" : ""}
             />
-            {errors.userName && (
+            {submitted && errors.userName && (
               <p className="text-xs text-destructive">{errors.userName}</p>
             )}
           </div>
@@ -200,7 +246,7 @@ export default function RegisterPage() {
                 {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
               </button>
             </div>
-            {errors.password && (
+            {submitted && errors.password && (
               <p className="text-xs text-destructive">{errors.password}</p>
             )}
           </div>
@@ -224,12 +270,12 @@ export default function RegisterPage() {
                 {showConfirmPassword ? <EyeOff size={15} /> : <Eye size={15} />}
               </button>
             </div>
-            {errors.password && (
+            {submitted && errors.password && (
               <p className="text-xs text-destructive">{errors.password}</p>
             )}
           </div>
 
-          <div className="flex cursor-pointer flex-col items-center gap-4">
+          <div className="mt-2 mb-6 flex cursor-pointer flex-col items-center gap-4">
             <input
               type="file"
               accept="image/*"
@@ -238,18 +284,27 @@ export default function RegisterPage() {
               className="hidden"
             />
 
-            <Button onClick={handleClick}>Choisir une image</Button>
+            <Button className="cursor-pointer" onClick={handleClick}>
+              Choisir une image
+            </Button>
 
-            {image && (
-              <img
-                src={image}
-                alt="preview"
-                className="h-40 w-40 rounded-full border object-cover"
-              />
+            {profileImage && (
+              <div className="gap-2 p-2">
+                <Button className="cursor-pointer" onClick={handleRemoveImage}>
+                  <X></X>
+                </Button>
+                <Image
+                  width={40}
+                  height={40}
+                  src={profileImage}
+                  alt="preview"
+                  className="h-40 w-40 rounded-full border object-cover"
+                />
+              </div>
             )}
           </div>
 
-          <div className="flex cursor-pointer flex-col items-center gap-4">
+          <div className="mt-2 mb-6 flex cursor-pointer flex-col items-center gap-4">
             <input
               type="file"
               accept="image/*"
@@ -258,14 +313,23 @@ export default function RegisterPage() {
               className="hidden"
             />
 
-            <Button onClick={handleClickBanner}>Choisir une bannière</Button>
+            <Button className="cursor-pointer" onClick={handleClickBanner}>
+              Choisir une bannière
+            </Button>
 
             {banner && (
-              <img
-                src={banner}
-                alt="preview"
-                className="h-40 w-40 rounded-full border object-cover"
-              />
+              <div className="gap-2 p-2">
+                <Button className="cursor-pointer" onClick={handleRemoveBanner}>
+                  <X></X>
+                </Button>
+                <Image
+                  width={72}
+                  height={40}
+                  src={banner}
+                  alt="preview"
+                  className="h-40 w-72 rounded-xl border object-cover"
+                />
+              </div>
             )}
           </div>
           <div className="flex flex-row justify-center gap-1.5">
@@ -273,7 +337,7 @@ export default function RegisterPage() {
               <Button
                 onClick={handleGoBackLogin}
                 type="submit"
-                className="flex w-full cursor-pointer bg-gray-400 text-primary-foreground hover:bg-red-700"
+                className="flex w-full cursor-pointer bg-red-600 text-primary-foreground hover:bg-red-700"
               >
                 Annuler
               </Button>
@@ -281,8 +345,9 @@ export default function RegisterPage() {
 
             <Button
               onClick={handleSubmit}
+              disabled={!isRegisterFormValid}
               type="submit"
-              className="flex w-[50%] cursor-pointer bg-primary text-primary-foreground"
+              className="flex w-[50%] cursor-pointer bg-green-600 text-primary-foreground hover:bg-green-700"
             >
               Enregistrer
             </Button>

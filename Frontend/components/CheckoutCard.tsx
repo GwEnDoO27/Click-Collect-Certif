@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
@@ -14,29 +14,40 @@ import {
 } from "@/components/ui/select"
 
 export default function CheckoutCard() {
-  const [firstName, setFirstName] = useState("")
   const [email, setEmail] = useState("")
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [address, setAddress] = useState("")
+  const [postalCode, setPostalCode] = useState("")
+  const [city, setCity] = useState("")
+  const [department, setDepartment] = useState("")
+  const [phoneNumber, setPhoneNumber] = useState("")
 
   const [errors, setErrors] = useState({
     email: "",
-    // firstName: "",
-    // lastName: "",
-    // userName: "",
-    // password: "",
-    // confirmPassword: "",
-    // profilePicture: "",
+    firstName: "",
+    lastName: "",
+    address: "",
+    postalCode: "",
+    city: "",
+    department: "",
+    phoneNumber: "",
     // bannerPicture: "",
   })
 
   const [submitted, setSubmitted] = useState(false)
   const [deliveryType, setDeliveryType] = useState("")
 
-  const isChecloutFormValid = email && /\S+@\S+\.\S+/.test(email)
-  // firstName !== "" &&
-  // lastName !== "" &&
-  // userName !== "" &&
-  // password !== "" &&
-  // confirmPassword === password
+  const isChecloutFormValid =
+    email &&
+    /\S+@\S+\.\S+/.test(email) &&
+    firstName !== "" &&
+    lastName !== "" &&
+    address !== "" &&
+    postalCode !== "" &&
+    city !== "" &&
+    department !== "default" &&
+    phoneNumber !== ""
 
   const hasErrors = Object.values(errors).some((error) => error !== "")
 
@@ -47,18 +58,23 @@ export default function CheckoutCard() {
       email: "",
       firstName: "",
       lastName: "",
-      userName: "",
-      password: "",
-      confirmPassword: "",
-      profilePicture: "",
-      bannerPicture: "",
+      address: "",
+      postalCode: "",
+      city: "",
+      department: "",
+      phoneNumber: "",
     }
     // if (!email || !/\S+@\S+\.\S+/.test(email))
     //   newErrors.email = "Adresse e-mail invalide."
     if (firstName === "") newErrors.firstName = "Prénom invalide."
-    // if (lastName === "") newErrors.lastName = "Nom invalide."
-    // if (userName === "") newErrors.userName = "Nom invalide."
-    // if (!password) newErrors.password = "Mot de passe requis."
+    if (lastName === "") newErrors.lastName = "Nom invalide."
+    if (address === "") newErrors.address = "Adresse invalide."
+    if (!postalCode) newErrors.postalCode = "Code postal requis."
+    if (department === "default")
+      newErrors.department = "Veuillez indiqué un département."
+    if (city === "") newErrors.city = "Ville requise."
+    if (phoneNumber === "")
+      newErrors.phoneNumber = "Numéro de téléphone requis."
     setErrors(newErrors)
 
     // If fields are filled, we create the form that will be sent to the front
@@ -68,15 +84,22 @@ export default function CheckoutCard() {
       const formDataRegister = new FormData()
       //   formDataRegister.append("email", email)
       formDataRegister.append("firstName", firstName)
-      //   formDataRegister.append("lastName", lastName)
-      //   formDataRegister.append("userName", userName)
-      //   formDataRegister.append("password", password)
+      formDataRegister.append("lastName", lastName)
+      formDataRegister.append("address", address)
+      formDataRegister.append("postalCode", postalCode)
+      formDataRegister.append("city", city)
+      formDataRegister.append("departement", department)
+      formDataRegister.append("phone", phoneNumber)
 
       console.log([...formDataRegister.entries()])
 
       // Call API TO SAVE DATA USER
     }
   }
+
+  useEffect(() => {
+    console.log(department)
+  }, [department])
 
   return (
     <Card className="flex flex-col items-center">
@@ -103,15 +126,97 @@ export default function CheckoutCard() {
         <Label className="mb-2 text-sm">Adresse de Livraison</Label>
         <div className="grid w-full grid-cols-2 items-center gap-10">
           {/* <div className="bg-red-200 flex flex-row gap-10"> */}
-          <Input type="text" placeholder="Prénom" />
-          <Input type="text" placeholder="Nom" />
-          <Input type="text" placeholder="Adresse" className="col-span-2" />
-          <Input type="text" placeholder="Code postal" />
-          <Input type="text" placeholder="Ville" />
-          <div className="col-span-2">
-            <Select>
+          <div className="flex flex-col">
+            <Label htmlFor="firstName" className="mb-2 ml-1 text-xs">
+              Prénom
+            </Label>
+            <Input
+              id="firstName"
+              type="text"
+              placeholder="Prénom"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              className={errors.firstName ? "border-destructive" : ""}
+            />
+            {submitted && errors.firstName && (
+              <p className="text-xs text-destructive">{errors.firstName}</p>
+            )}
+          </div>
+          <div className="flex flex-col">
+            <Label htmlFor="lastName" className="mb-2 ml-1 text-xs">
+              Nom
+            </Label>
+            <Input
+              id="lastName"
+              type="text"
+              placeholder="Nom"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              className={errors.lastName ? "border-destructive" : ""}
+            />
+            {submitted && errors.lastName && (
+              <p className="text-xs text-destructive">{errors.lastName}</p>
+            )}
+          </div>
+          {/* <Input type="text" placeholder="Nom" /> */}
+          <div className="col-span-2 flex flex-col">
+            <Label htmlFor="address" className="mb-2 ml-1 text-xs">
+              Adresse
+            </Label>
+            <Input
+              id="address"
+              type="text"
+              placeholder="Adresse"
+              value={lastName}
+              onChange={(e) => setAddress(e.target.value)}
+              className={errors.lastName ? "border-destructive" : ""}
+            />
+            {submitted && errors.lastName && (
+              <p className="text-xs text-destructive">{errors.lastName}</p>
+            )}
+          </div>
+          {/* <Input type="text" placeholder="Adresse" className="col-span-2" /> */}
+          <div className="flex flex-col">
+            <Label htmlFor="postCode" className="mb-2 ml-1 text-xs">
+              Code postal
+            </Label>
+            <Input
+              id="postCode"
+              type="text"
+              placeholder="Code postal"
+              value={postalCode}
+              onChange={(e) => setPostalCode(e.target.value)}
+              className={errors.postalCode ? "border-destructive" : ""}
+            />
+            {submitted && errors.postalCode && (
+              <p className="text-xs text-destructive">{errors.postalCode}</p>
+            )}
+          </div>
+          {/* <Input type="text" placeholder="Code postal" /> */}
+          <div className="flex flex-col">
+            <Label htmlFor="city" className="mb-2 ml-1 text-xs">
+              Ville
+            </Label>
+            <Input
+              id="city"
+              type="text"
+              placeholder="Ville"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              className={errors.city ? "border-destructive" : ""}
+            />
+            {submitted && errors.city && (
+              <p className="text-xs text-destructive">{errors.city}</p>
+            )}
+          </div>
+          {/* <Input type="text" placeholder="Ville" /> */}
+          <div className="col-span-2 flex flex-col">
+            <Label htmlFor="city" className="mb-2 ml-1 text-xs">
+              Choix du département normand
+            </Label>
+            <Select value={department} onValueChange={setDepartment}>
               <SelectTrigger className="cursor-pointer">
-                <SelectValue placeholder="Choisir un département normand" />
+                <SelectValue placeholder="Choisir un département" />
               </SelectTrigger>
 
               <SelectContent>
@@ -136,7 +241,23 @@ export default function CheckoutCard() {
               </SelectContent>
             </Select>
           </div>
-          <Input placeholder="Téléphone" className="col-span-2" />{" "}
+          <div className="col-span-2 flex flex-col">
+            <Label htmlFor="phone" className="mb-2 ml-1 text-xs">
+              N° de téléphone
+            </Label>
+            <Input
+              id="phone"
+              type="text"
+              placeholder="Téléphone"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              className={errors.phoneNumber ? "border-destructive" : ""}
+            />
+            {submitted && errors.phoneNumber && (
+              <p className="text-xs text-destructive">{errors.phoneNumber}</p>
+            )}
+          </div>
+          {/* <Input placeholder="Téléphone" className="col-span-2" />{" "} */}
           <div className="flex w-full flex-col">
             <Label className="mb-2 text-sm">Choix de Livraison</Label>
             <div className="col-span-2">

@@ -9,7 +9,7 @@ type Props = {
   item: CartItem
 }
 
-export default function CartItemCard({ item }: Props) {
+export default function CartItemValidateCard({ item }: Props) {
   console.log("ITEMS : ", item)
 
   return (
@@ -17,7 +17,7 @@ export default function CartItemCard({ item }: Props) {
       <div className="flex items-center">
         <div className="text-6xl">{item.product.emoji}</div>
       </div>
-      <div className="grid w-full grid-cols-5 items-center gap-10">
+      <div className="grid w-full grid-cols-3 items-center gap-10">
         {/* <div className="bg-red-200 flex flex-row gap-10"> */}
         <div className="">
           <p className="text-sm font-medium">{item.product.name}</p>
@@ -36,12 +36,9 @@ export default function CartItemCard({ item }: Props) {
           </span>
         </div>
         {/* </div> */}
-        <Button size="icon" variant="outline" className="cursor-pointer">
+        {/* <Button size="icon" variant="outline" className="cursor-pointer">
           <Plus size={14} />
-        </Button>
-        <Button size="icon" variant="outline" className="cursor-pointer">
-          <Trash2 size={14} />
-        </Button>
+        </Button> */}
       </div>
     </Card>
   )

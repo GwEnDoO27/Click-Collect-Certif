@@ -13,7 +13,11 @@ import {
   SelectItem,
 } from "@/components/ui/select"
 
-export default function CheckoutCard() {
+type Props = {
+  onValidationChange: (isValid: boolean) => void
+}
+
+export default function CheckoutCard({ onValidationChange }: Props) {
   const [email, setEmail] = useState("")
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
@@ -22,6 +26,7 @@ export default function CheckoutCard() {
   const [city, setCity] = useState("")
   const [department, setDepartment] = useState("")
   const [phoneNumber, setPhoneNumber] = useState("")
+  const [deliveryType, setDeliveryType] = useState("")
 
   const [errors, setErrors] = useState({
     email: "",
@@ -32,23 +37,10 @@ export default function CheckoutCard() {
     city: "",
     department: "",
     phoneNumber: "",
-    // bannerPicture: "",
+    deliveryType: "",
   })
 
   const [submitted, setSubmitted] = useState(false)
-  const [deliveryType, setDeliveryType] = useState("")
-
-  const isChecloutFormValid =
-    email &&
-    /\S+@\S+\.\S+/.test(email) &&
-    firstName !== "" &&
-    lastName !== "" &&
-    address !== "" &&
-    postalCode !== "" &&
-    city !== "" &&
-    department !== "default" &&
-    phoneNumber !== ""
-
   const hasErrors = Object.values(errors).some((error) => error !== "")
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -63,35 +55,43 @@ export default function CheckoutCard() {
       city: "",
       department: "",
       phoneNumber: "",
+      deliveryType: "",
     }
-    // if (!email || !/\S+@\S+\.\S+/.test(email))
-    //   newErrors.email = "Adresse e-mail invalide."
+    if (!email || !/\S+@\S+\.\S+/.test(email))
+      newErrors.email = "Adresse e-mail invalide."
     if (firstName === "") newErrors.firstName = "Prénom invalide."
     if (lastName === "") newErrors.lastName = "Nom invalide."
     if (address === "") newErrors.address = "Adresse invalide."
     if (!postalCode) newErrors.postalCode = "Code postal requis."
     if (department === "default")
-      newErrors.department = "Veuillez indiqué un département."
+      newErrors.department = "Veuillez indiqur un département."
     if (city === "") newErrors.city = "Ville requise."
     if (phoneNumber === "")
       newErrors.phoneNumber = "Numéro de téléphone requis."
+    if (deliveryType === "default")
+      newErrors.deliveryType = "Veuillez indiqur un moyen de livraison."
     setErrors(newErrors)
 
+    // Boolean that apply true or false depending on the way the user fills the fields
+    const isValid = !Object.values(newErrors).some((error) => error !== "")
+    onValidationChange(isValid)
     // If fields are filled, we create the form that will be sent to the front
     if (!hasErrors) {
       // Basic checks to verify our inputs
 
-      const formDataRegister = new FormData()
-      //   formDataRegister.append("email", email)
-      formDataRegister.append("firstName", firstName)
-      formDataRegister.append("lastName", lastName)
-      formDataRegister.append("address", address)
-      formDataRegister.append("postalCode", postalCode)
-      formDataRegister.append("city", city)
-      formDataRegister.append("departement", department)
-      formDataRegister.append("phone", phoneNumber)
+      const formChechout = {
+        firstName: firstName,
+        lastName: lastName,
+        address: address,
+        postalCode: postalCode,
+        city: city,
+        departement: department,
+        phone: phoneNumber,
+        deleveryType: deliveryType,
+      }
+      //   formChechout.append("email", email)
 
-      console.log([...formDataRegister.entries()])
+      console.log("FORM CHECKOUT", formChechout)
 
       // Call API TO SAVE DATA USER
     }
@@ -99,7 +99,8 @@ export default function CheckoutCard() {
 
   useEffect(() => {
     console.log(department)
-  }, [department])
+    console.log(deliveryType)
+  }, [department, deliveryType])
 
   return (
     <Card className="flex flex-col items-center">
@@ -124,7 +125,7 @@ export default function CheckoutCard() {
 
       <div className="flex w-full flex-col p-4">
         <Label className="mb-2 text-sm">Adresse de Livraison</Label>
-        <div className="grid w-full grid-cols-2 items-center gap-10">
+        <div className="mb-6 grid w-full grid-cols-2 items-center gap-10">
           {/* <div className="bg-red-200 flex flex-row gap-10"> */}
           <div className="flex flex-col">
             <Label htmlFor="firstName" className="mb-2 ml-1 text-xs">
@@ -167,7 +168,7 @@ export default function CheckoutCard() {
               id="address"
               type="text"
               placeholder="Adresse"
-              value={lastName}
+              value={address}
               onChange={(e) => setAddress(e.target.value)}
               className={errors.lastName ? "border-destructive" : ""}
             />
@@ -240,6 +241,9 @@ export default function CheckoutCard() {
                 </SelectItem>
               </SelectContent>
             </Select>
+            {submitted && errors.department && (
+              <p className="text-xs text-destructive">{errors.department}</p>
+            )}
           </div>
           <div className="col-span-2 flex flex-col">
             <Label htmlFor="phone" className="mb-2 ml-1 text-xs">
@@ -261,7 +265,7 @@ export default function CheckoutCard() {
           <div className="flex w-full flex-col">
             <Label className="mb-2 text-sm">Choix de Livraison</Label>
             <div className="col-span-2">
-              <Select onValueChange={setDeliveryType}>
+              <Select value={deliveryType} onValueChange={setDeliveryType}>
                 <SelectTrigger className="cursor-pointer">
                   <SelectValue placeholder="Choisir un département normand" />
                 </SelectTrigger>
@@ -281,6 +285,11 @@ export default function CheckoutCard() {
                   </SelectItem>
                 </SelectContent>
               </Select>
+              {submitted && errors.deliveryType && (
+                <p className="text-xs text-destructive">
+                  {errors.deliveryType}
+                </p>
+              )}
             </div>
             {deliveryType === "relais" && (
               <div className="col-span-2 mt-4 flex flex-row gap-6">
@@ -325,6 +334,9 @@ export default function CheckoutCard() {
           </div>
           {/* </div> */}
         </div>
+        <Button onClick={handleSubmit} className="cursor-pointer">
+          Valider les informations
+        </Button>
       </div>
     </Card>
   )

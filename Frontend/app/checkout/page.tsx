@@ -1,13 +1,18 @@
 "use client"
+import { useState } from "react"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
-import CartTotal from "@/components/CartTotal"
+import CartTotalCheckout from "@/components/CardTotalCheckout"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 import CheckoutCard from "@/components/CheckoutCard"
 
 export default function CartCheckoutPage() {
+  // Set a boolean so this page knows if the fields in CheckoutCard component are filled the right way
+  // Then it is sent to CartTotalCheckout
+  const [isCheckoutValid, setIsCheckoutValid] = useState(false)
+
   return (
     <>
       <Navbar />
@@ -26,9 +31,11 @@ export default function CartCheckoutPage() {
         </div>
         <div className="flex grid-cols-[1fr_350px] flex-row gap-6">
           <div className="flex w-full flex-col gap-4">
-            <CheckoutCard></CheckoutCard>
+            <CheckoutCard onValidationChange={setIsCheckoutValid} />
           </div>
-          <CartTotal></CartTotal>
+          <CartTotalCheckout
+            isCheckoutValid={isCheckoutValid}
+          ></CartTotalCheckout>
         </div>
         <Link href={"/"}>
           <Button className="mt-6 cursor-pointer bg-white text-black hover:bg-primary hover:text-white">

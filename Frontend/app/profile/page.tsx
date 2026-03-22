@@ -65,7 +65,7 @@ export default function ProfilePage() {
                 />
                 {/* </div> */}
               </div>
-              <div className="grid w-full grid-cols-2 items-center gap-10">
+              <div className="mt-6 grid w-full grid-cols-2 items-center gap-10">
                 {/* Prénom */}
                 <div className="flex flex-col gap-1.5">
                   <Label htmlFor="firstname">Prénom</Label>
@@ -126,8 +126,13 @@ export default function ProfilePage() {
               </div>
             </Card>
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-between">
             {/* <Button className="cursor-pointer">Modifier</Button> */}
+            <Link href={"/commercant_home"}>
+              <Button className="cursor-pointer bg-white text-black hover:bg-primary hover:text-white">
+                Voir mes produits
+              </Button>
+            </Link>
             <Sheet>
               <SheetTrigger asChild>
                 <Button className="cursor-pointer">Modifier</Button>

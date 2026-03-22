@@ -8,6 +8,47 @@ export type Product = {
   description: string
 }
 
+export const traderProducts: Product[] = [
+  {
+    id: 3,
+    name: "Baguette tradition",
+    category: "Boulangerie",
+    price: 1.1,
+    emoji: "🥖",
+    description:
+      "Farine de blé Label Rouge, sans additif. La vraie baguette comme chez le boulanger.",
+  },
+  {
+    id: 19,
+    name: "Thé vert Sencha bio",
+    category: "Boissons",
+    price: 9.5,
+    emoji: "🍵",
+    badge: "Nouveau",
+    description:
+      "Feuilles entières certifiées bio, origine Japon. Végétal et frais, infusion 70°C 2 min.",
+  },
+  {
+    id: 28,
+    name: "Batterie externe 20000mAh",
+    category: "Électronique",
+    price: 39.99,
+    emoji: "🔋",
+    description:
+      "Recharge 3 appareils simultanément. Compatible charge rapide 18W, indicateur LED précis.",
+  },
+  {
+    id: 51,
+    name: "Atomic Habits – J. Clear",
+    category: "Librairie",
+    price: 18.9,
+    emoji: "📗",
+    badge: "Promo",
+    description:
+      "Le guide de référence sur les petites habitudes à fort impact. Plus d'1M d'exemplaires vendus.",
+  },
+]
+
 export const products: Product[] = [
   // --- Boulangerie ---
   {

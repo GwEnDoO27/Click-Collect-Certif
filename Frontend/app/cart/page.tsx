@@ -8,6 +8,7 @@ import CartItemCard from "@/components/CartItemCard"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ShoppingBag, Eye, EyeOff, ArrowLeft } from "lucide-react"
+import ProductDetail from "@/components/ProductDetail"
 
 import { useState } from "react"
 
@@ -21,12 +22,12 @@ export default function CartPage() {
       <Navbar />
       <main className="mx-auto max-w-[1200px] flex-1 px-6 py-8">
         <div className="mb-6">
-          {/* <Link href={"/"}>
+          <Link href={"/"}>
             <Button className="cursor-pointer bg-white text-black hover:bg-primary hover:text-white">
               <ArrowLeft></ArrowLeft>
               Retour
             </Button>
-          </Link> */}
+          </Link>
           <h1 className="text-[22px] font-medium">Votre panier</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Voici les éléments de vôtre panier :
@@ -54,10 +55,10 @@ export default function CartPage() {
         </Link>
       </main>
       <Footer />
-      {/* <ProductDetail
+      <ProductDetail
         product={selectedProduct}
         onClose={() => setSelectedCartItems(null)}
-      /> */}
+      />
     </div>
   )
 }

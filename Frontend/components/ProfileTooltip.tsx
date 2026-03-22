@@ -40,6 +40,11 @@ export function ToolTipProfile() {
       <DropdownMenuContent className="w-40" align="start">
         <DropdownMenuGroup>
           <DropdownMenuLabel>Mon compte</DropdownMenuLabel>
+          <Link href={"/profile"}>
+            <DropdownMenuItem className="cursor-pointer">
+              Mon profil
+            </DropdownMenuItem>
+          </Link>
           <Link href={"/login"}>
             <DropdownMenuItem className="cursor-pointer">
               Se connecter
